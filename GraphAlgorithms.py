@@ -3,6 +3,16 @@ import matplotlib.pyplot as plt
 from heapdict import heapdict
 
 
+
+    
+'''
+SSSP - Single Source Shortest Path Algorithms. Ordered by:
+- Belman Ford algorithm for directed/undirected weighed graphs with no negative cycles
+- Dijkstra algorithm for directed/undirected weighed positive graphs
+- BFS algorithm for directed/undirected unweighed graphs
+'''
+
+
 '''
 The Relax function is used in relaxation based algorithms. Such as Dijkstra and Belman-Ford.
 It recieves two vertices and function that returns the current distance for each vertex.
@@ -11,10 +21,45 @@ shortest path to v to be from u.
 '''
 def Relax(G, u, v, distFunction):
     distuv = G.nodes[u]["distance"] + G.edges[u, v]["weight"]
+    print("u is:", u, "and v is", v)
+    print("the current dist is", distFunction[v])
     if distuv < distFunction[v]:
+        print("got here")
+        # print("got here and the distance is:", distuv, "and the previous distance was:", distFunction[v])
         distFunction[v] = distuv
-        G.add_node(v, pi=u)
+        print("now the dist is", distFunction[v] )
+        # print("now the distance is:", distFunction[v])
+        G.add_node(v, distance= G.nodes[u]["distance"] + G.edges[u, v]["weight"] ,pi = u)
+
+'''
+The Belman Ford algorithm solves the SSSP problem for a Weighed Directed / Undirected Graph.
+The algorithm assumes that there are no negative cycles in the grapg.
+'''
+def Belman_Ford(G, source):
+    distFunction = dict()
+    # first, setting the weight of all nodes to be infinity
+    for vertex in G.nodes:
+        distFunction[vertex] = 2**30 # assumed to be infinity
     
+    #next, setting all distances to be infinity, and all predecessors to be null
+    for vertex in G.nodes:
+        G.add_node(vertex, distance = 2**30, pi = None)
+    
+    # the source node will have distance zero from itself, and hightset priority
+    distFunction[source] = 0
+    G.add_node(source, distance = 0)
+    # looping over all edges |V| - 1 times. As long as the longest possible path between two vertices
+    for i in range(0, len(G.nodes()) + 1, 1): # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!DANIEL need to handle directed graph
+        for (u,v) in G.edges():
+            Relax(G, u, v, distFunction)
+            Relax(G, v, u, distFunction) 
+    
+    for vertex in G.nodes:
+        print(vertex, "distance: ", G.nodes[vertex]['distance'], "predecessor: ", G.nodes[vertex]['pi'])
+    
+
+
+
 
 '''
 The Dijkstra algorithm solves the SSSP problem for a Weighed Directed / Undirected Graph.
@@ -78,3 +123,5 @@ def BFS(G, source):
                 
     for vertex in G.nodes():
         print(vertex, "distance: " , G.nodes[vertex]['distance'])
+
+
