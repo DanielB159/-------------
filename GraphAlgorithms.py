@@ -21,13 +21,9 @@ shortest path to v to be from u.
 '''
 def Relax(G, u, v, distFunction):
     distuv = G.nodes[u]["distance"] + G.edges[u, v]["weight"]
-    print("u is:", u, "and v is", v)
-    print("the current dist is", distFunction[v])
     if distuv < distFunction[v]:
-        print("got here")
         # print("got here and the distance is:", distuv, "and the previous distance was:", distFunction[v])
         distFunction[v] = distuv
-        print("now the dist is", distFunction[v] )
         # print("now the distance is:", distFunction[v])
         G.add_node(v, distance= G.nodes[u]["distance"] + G.edges[u, v]["weight"] ,pi = u)
 
@@ -82,13 +78,7 @@ def Dijkstra(G, source):
     # go over all of the nodes in the priority queue
     while len(minHeap) != 0:
         vertex = minHeap.popitem()[0]
-        # print("the length of the heap is now:",len(minHeap))
-        if G.nodes[vertex]["pi"] != None: # if the current node is not the source node
-            # set the current vertex weight to add to the predecessors weight with the edge between them
-            predecessor = G.nodes[vertex]["pi"]
-            G.add_node(vertex, distance = G.nodes[predecessor]["distance"] + G.edges[predecessor, vertex]["weight"])
-        
-        # decrease Relax all of the neighbors of the vertex
+        # Relax all of the neighbors of the vertex
         for neighbor in G[vertex]:
             if minHeap.get(neighbor) != None:
                 Relax(G, vertex, neighbor, minHeap)

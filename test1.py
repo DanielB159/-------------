@@ -18,7 +18,7 @@ if __name__ == '__main__':
     nx.draw_networkx_labels(G, pos, font_size=20, font_family="sans-serif")
     edge_labels = nx.get_edge_attributes(G, "weight")
     nx.draw_networkx_edge_labels(G, pos, edge_labels)
-    ga.Belman_Ford(G, "a")
+    ga.Dijkstra(G, "a")
     plt.show()
 
 
